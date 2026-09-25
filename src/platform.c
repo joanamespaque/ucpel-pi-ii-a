@@ -5,6 +5,8 @@
 int platform_init(void)
 {
     WSADATA wsa_data;
+    /* Adapter names are converted to UTF-8, so the console must render UTF-8. */
+    SetConsoleOutputCP(CP_UTF8);
     return WSAStartup(MAKEWORD(2, 2), &wsa_data) == 0 ? 0 : -1;
 }
 
