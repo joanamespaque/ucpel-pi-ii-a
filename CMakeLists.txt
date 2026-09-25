@@ -1,0 +1,21 @@
+cmake_minimum_required(VERSION 3.10)
+project(network_monitor C)
+
+set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+
+file(GLOB SOURCES ${CMAKE_SOURCE_DIR}/src/*.c)
+add_executable(network_monitor ${SOURCES})
+target_include_directories(network_monitor PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+if(WIN32)
+    target_link_libraries(network_monitor PRIVATE iphlpapi ws2_32)
+    if(MSVC)
+        target_compile_definitions(network_monitor PRIVATE _CRT_SECURE_NO_WARNINGS)
+    endif()
+else()
+    target_compile_definitions(network_monitor PRIVATE _DEFAULT_SOURCE)
+    if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
+        target_compile_options(network_monitor PRIVATE -Wall -Wextra)
+    endif()
+endif()
