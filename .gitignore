@@ -1,0 +1,12 @@
+# Build output
+bin/
+build/
+obj/
+*.o
+*.obj
+*.exe
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store
