@@ -1,0 +1,54 @@
+@startuml
+!include estilo.iuml
+hide footbox
+mainframe **sd** Consultar Programação
+autonumber "0:"
+actor Visitante
+participant "DOM\n(navegador)" as DOM
+participant "main.js" as Main
+participant "render.js" as Render
+participant "event : Event" as Ev
+participant "atividade : Activity" as At
+participant "schedule.js" as Sch
+
+note across : Carregamento inicial da agenda
+Visitante -> DOM : abrir a página
+DOM -> Main : executar módulo (type="module")
+activate Main
+Main -> Render : renderSchedule(event, tabsEl, panelsEl)
+activate Render
+Render -> Ev : days
+activate Ev
+Ev --> Render : lista de datas
+deactivate Ev
+loop para cada dia em event.days
+  Render -> Ev : getActivitiesByDay(dia)
+  activate Ev
+  Ev --> Render : atividades do dia (ordenadas por horário)
+  deactivate Ev
+  loop para cada atividade do dia
+    Render -> At : renderScheduleItem()
+    activate At
+    At --> Render : HTML do item (<li>)
+    deactivate At
+  end
+end
+Render -> DOM : tabsEl.innerHTML / panelsEl.innerHTML = ...
+Render --> Main : HTML da agenda inserido
+deactivate Render
+Main -> Sch : initSchedule()
+activate Sch
+Sch -> DOM : registrar listeners de click e keydown nas abas
+Sch --> Main : abas prontas
+deactivate Sch
+deactivate Main
+
+note across : Troca de dia — sem nova consulta ao modelo (painéis já renderizados)
+Visitante -> DOM : clicar na aba "Dia 2"
+DOM -> Sch : evento click
+activate Sch
+Sch -> Sch : selectTab(tab)
+Sch -> DOM : alternar aria-selected e hidden
+deactivate Sch
+DOM --> Visitante : exibe o painel do Dia 2
+@enduml

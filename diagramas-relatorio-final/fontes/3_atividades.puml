@@ -1,0 +1,33 @@
+@startuml
+!include estilo.iuml
+|Visitante|
+start
+if (Veio do botão "Quero participar"?) then ([sim])
+  |Sistema (form.js)|
+  :Pré-marcar a oficina escolhida
+  (preselectWorkshop());
+else ([não])
+endif
+|Visitante|
+repeat
+  :Preencher nome, e-mail,
+  perfil e instituição;
+  if (Deseja participar de oficinas?) then ([sim])
+    :Marcar oficinas de interesse;
+  else ([não])
+  endif
+  :Aceitar o uso dos dados;
+  :Enviar formulário;
+  |Sistema (form.js)|
+  :Validar cada campo
+  (validateField() / validators);
+backward:Exibir erros nos campos (aria-invalid,
+aria-describedby) e focar no primeiro
+campo inválido;
+repeat while (Todos os campos são válidos?) is ([não]) not ([sim])
+:Gerar código de inscrição
+ST26-XXXX (generateCode());
+:Exibir mensagem de confirmação;
+:Limpar formulário (reset);
+stop
+@enduml

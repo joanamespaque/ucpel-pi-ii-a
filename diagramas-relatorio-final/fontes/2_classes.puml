@@ -1,0 +1,58 @@
+@startuml
+!include estilo.iuml
+hide empty members
+hide circle
+class Event {
+  - name: string
+  - edition: number
+  - startDate: string
+  - endDate: string
+  - description: string
+  - location: string
+  + /workshops: Workshop[*] {readOnly}
+  + /days: string[*] {readOnly}
+  --
+  + getActivitiesByDay(date: string): Activity[*]
+  + countActivities(type: string): number
+  + getSummary(): string
+}
+class Speaker {
+  - id: string
+  - name: string
+  - role: string
+  - organization: string
+  - topic: string
+  - bio: string
+  - photo: string [0..1]
+  --
+  + renderCard(): string
+}
+class Activity {
+  - title: string
+  - date: string
+  - time: string
+  - room: string
+  - type: string {talk | workshop | networking}
+  + /typeLabel: string {readOnly}
+  --
+  + renderScheduleItem(): string
+}
+class Workshop {
+  - id: string
+  - seats: number
+  - seatsTaken: number
+  - duration: string
+  - prerequisites: string
+  - bring: string
+  - description: string
+  + /seatsLeft: number {readOnly}
+  + /seatsStatus: Object {readOnly}
+  --
+  + hasSeats(): boolean
+  + renderCard(): string
+}
+Event "1" o-right- "+speakers *" Speaker : possui
+Event "1" *-- "+activities *" Activity : compõe
+Activity "*" -right-> "+speaker 0..1" Speaker : apresentada por >
+Workshop -up-|> Activity
+@enduml
