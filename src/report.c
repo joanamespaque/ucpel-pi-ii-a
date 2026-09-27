@@ -37,6 +37,7 @@ void print_header(void)
     printf("                               Monitor de Rede\n");
     printf("==============================================================================\n");
     printf("Platform: %s\n", PLATFORM_NAME);
+    printf("\nEstas sao as informacoes do monitor de rede da autora 'Joana Mespaque Borges':\n");
 }
 
 void print_interfaces(const struct ip_entry *entries, int count)
